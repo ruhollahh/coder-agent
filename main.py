@@ -9,17 +9,22 @@ import cerebras.cloud.sdk as cerebrassdk
 def main():
     parser = argparse.ArgumentParser(description="Chatbot")
     parser.add_argument("user_prompt", type=str, help="User prompt")
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
     args = parser.parse_args()
     load_dotenv()
     api_key = os.environ.get("CEREBRAS_API_KEY")
     if api_key == None:
         raise RuntimeError("no api key provided in .env file")
+    # boot.dev tests:
     # client = genai.Client(api_key=api_key)
     # response = client.models.generate_content(model="gemini-2.5-flash", contents="")
     # response.text
+    # parts=[
+    # role="user"
     client = cerebrassdk.Cerebras(api_key=api_key)
 
     user_prompt = args.user_prompt
+    chat_completion = None
     try:
         chat_completion = client.chat.completions.create(
             messages=[
@@ -48,9 +53,11 @@ def main():
     ):
         raise RuntimeError(f"something went wrong: {chat_completion}")
 
-    print(f"User prompt: {user_prompt}")
-    print(f"Prompt tokens: {chat_completion.usage.prompt_tokens}")
-    print(f"Response tokens: {chat_completion.usage.completion_tokens}")
+    if args.verbose:
+        print(f"User prompt: {user_prompt}")
+        print(f"Prompt tokens: {chat_completion.usage.prompt_tokens}")
+        print(f"Response tokens: {chat_completion.usage.completion_tokens}")
+
     print(f"Response:\n{chat_completion.choices[0].message.content}")
 
 
