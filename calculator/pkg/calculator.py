@@ -8,6 +8,7 @@ class Calculator:
             "*": lambda a, b: a * b,
             "/": lambda a, b: a / b,
         }
+        # Correct operator precedence: multiplication and division have higher precedence than addition and subtraction.
         self.precedence = {
             "+": 1,
             "-": 1,

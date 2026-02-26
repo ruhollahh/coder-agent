@@ -1,5 +1,5 @@
 import json
-from config import MAX_FILE_READ_CHARS
+import config
 from functions.get_files_info import schema_get_files_info, get_files_info
 from functions.get_file_content import schema_get_file_content, get_file_content
 from functions.run_python_file import schema_run_python_file, run_python_file
@@ -24,7 +24,7 @@ def call_function(function_call, verbose=False):
                 "tool_call_id": function_call.id,
                 "content": f"Unknown function: {function_name}",
             }
-        args["working_directory"] = "./calculator"
+        args["working_directory"] = config.WORKING_DIRECTORY
         function_result = function_map[function_name](**args)
         return {
             "role": "tool",
